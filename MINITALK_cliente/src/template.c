@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   template.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vics <vics@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: victgonz <victgonz@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 18:14:22 by vics              #+#    #+#             */
-/*   Updated: 2023/05/19 21:06:30 by vics             ###   ########.fr       */
+/*   Updated: 2023/05/22 14:15:02 by victgonz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,45 +43,35 @@ int	send_bit(char str, int i)
 		kill(global_var->pid, SIGUSR2);
 		return (0);
 	}
-	return (0);
+	return (-1);
 }
 
-void	stringToBits(const char* str)
+void	stringToBits(char c)
 {
-	int j;
-	int error;
-	char *bits;
+	int	bit;
 
-	j = 0;
-	bits = malloc(sizeof(char) * 9);
-	ft_bzero(bits, 9);
-    while (str[j])
+	bit = 0;
+	while (bit < 8)
 	{
-        for (int i = 7; i >= 0; i--)
-		{
-            error = 1;
-			while (error)
-			{
-				int x = send_bit(str[j], i);
-				usleep(global_var->bauds_pause);
-				if (x == global_var->error_reciving)
-					error = 0;
-			}
-        }
-		printf("\n");
-        j++;
-    }
+		if ((c & (0x01 << bit)))
+			kill(global_var->pid, SIGUSR1);
+		else
+			kill(global_var->pid, SIGUSR2);
+		usleep(500);
+		bit++;
+	}
 }
 
 int main (int argc, char **argv) 
 {
 	global_var = malloc(sizeof(t_variables));
-	global_var->bauds_pause = 104;
-	global_var->personal_pid = ft_itoa(getpid());
+	global_var->bauds_pause = 5000;
+	global_var->personal_pid = getpid();
 	global_var->pid = ft_atoi(argv[1]);
 	global_var->error_reciving = false;
 
-	printf("PID: %s\n", global_var->personal_pid);
+	printf("PID CLIENTE: %d\n", global_var->personal_pid);
+	printf("PID SERVER: %d\n", global_var->pid);
 
 	clock_t inicio, fin; //ELIMINAR ESTO
     double tiempo_total; //ELIMINAR ESTO
@@ -91,21 +81,32 @@ int main (int argc, char **argv)
 	signal(SIGUSR1, &signalHandler);
 	signal(SIGUSR2, &signalHandler_2);
 /**/
-	global_var->error_reciving = true;
-	kill(global_var->pid, SIGUSR1);
-	kill(global_var->pid, SIGUSR2);
-	usleep(global_var->bauds_pause);
-
-
+	// printf("INCICIO TRANSMISION\n");
+	// global_var->error_reciving = true;
+	int peticion = 1;//kill(global_var->pid, SIGUSR1);
+	printf("Peticion conexion: %d\n", peticion);
+	// usleep(global_var->bauds_pause);
 	printf("\nENVIANDO TEXTO\n");
-	const char* texto = "hola\n";
-	stringToBits(texto);
+	const char *texto = "hola";//argv[2];
+	if (peticion == 0)
+	{
+		int i = 0;
+		while (texto[i])
+		{
+			stringToBits(texto[i]);
+			i++;
+		}
+		//stringToBits("\0");
+	}
 
-	usleep(global_var->bauds_pause);
-	global_var->error_reciving = true;
-	kill(global_var->pid, SIGUSR1);
-	kill(global_var->pid, SIGUSR2);
-	usleep(global_var->bauds_pause);
+	// printf("FIN TRANSMISION\n");
+	// global_var->error_reciving = true;
+	// kill(global_var->pid, SIGUSR1);
+	// usleep(1);
+	// kill(global_var->pid, SIGUSR2);
+	// usleep(global_var->bauds_pause);
+
+	
 	/*global_var->error_reciving = true;
 	
 	stringToBits_2(global_var->personal_pid);

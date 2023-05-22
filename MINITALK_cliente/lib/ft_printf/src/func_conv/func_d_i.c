@@ -6,7 +6,7 @@
 /*   By: victgonz <victgonz@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 21:48:07 by victgonz          #+#    #+#             */
-/*   Updated: 2023/02/12 23:25:07 by victgonz         ###   ########.fr       */
+/*   Updated: 2023/05/22 09:37:45 by victgonz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int get_width_precision(t_list *info, long long int nbr, int *len, int *precisio
 	{
 		*precision = atoi(info->precision) - *len;
 		if (nbr < 0)
-			*precision++;
+			*precision += 1;
 	}
 	if (*precision <= 0)
 		width -= *len;
