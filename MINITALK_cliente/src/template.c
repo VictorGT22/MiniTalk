@@ -6,7 +6,7 @@
 /*   By: victgonz <victgonz@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 18:14:22 by vics              #+#    #+#             */
-/*   Updated: 2023/05/22 14:15:02 by victgonz         ###   ########.fr       */
+/*   Updated: 2023/05/22 14:18:17 by victgonz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ int main (int argc, char **argv)
 	printf("Peticion conexion: %d\n", peticion);
 	// usleep(global_var->bauds_pause);
 	printf("\nENVIANDO TEXTO\n");
-	const char *texto = "hola";//argv[2];
-	if (peticion == 0)
+	const char *texto = "pepeppppppppppert";//argv[2];
+	if (peticion)
 	{
 		int i = 0;
 		while (texto[i])
