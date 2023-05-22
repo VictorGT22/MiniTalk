@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"template.h": "c",
+		"signal.h": "c",
+		"stdbool.h": "c",
+		"template_struct.h": "c"
+	}
+}

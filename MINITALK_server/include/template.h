@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   template.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vics <vics@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: victgonz <victgonz@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 23:43:48 by victgonz          #+#    #+#             */
-/*   Updated: 2023/05/19 12:49:03 by vics             ###   ########.fr       */
+/*   Updated: 2023/05/22 09:05:51 by victgonz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PUSHSWAP_h
-# define PUSHSWAP_H
+#ifndef TEMPLATE_H
+# define TEMPLATE_H
 
 # define BAUDS 9600
 
@@ -22,4 +22,3 @@
 # include <limits.h>
 
 #endif
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   template.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vics <vics@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: victgonz <victgonz@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 18:14:22 by vics              #+#    #+#             */
-/*   Updated: 2023/05/19 21:15:58 by vics             ###   ########.fr       */
+/*   Updated: 2023/05/22 14:12:36 by victgonz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,54 +19,44 @@
 
 t_variables *global_var = NULL;
 
-char	bitsToString(const char* bits)
+void	ft_btoa(int sig)
 {
-    int i = 0;
-	
-    while (bits[i] != '\0') {
-        unsigned char ch = 0;
-        for (int j = 0; j < 8; j++) {
-            ch = (ch << 1) | (bits[i] - '0');
-            i++;
-        }
-        return (ch);
-    }
-	return ('\0');
-}
+	static int	bit;
+	static int	i;
 
-void	print_bits()
-{
-	char ch;
-	
-	ch = bitsToString(global_var->str_bits);
-	printf("%c", ch);
-	ft_bzero(global_var->str_bits, 9);
-	global_var->recived_counter = 0;
+	if (sig == SIGUSR1)
+		i |= (0x01 << bit);
+	bit++;
+	if (bit == 8)
+	{
+		printf("%c", i);
+		bit = 0;
+		i = 0;			
+	}
 }
 
 void signal_handler(int signal, siginfo_t *info, void *context)
 {
-	//printf("entra\n");
 	global_var->pid = info->si_pid;
-	if (signal == SIGUSR1)
+	//printf("PID CLIENTE: %d\n", global_var->pid);
+	// if (!global_var->conversation_started && signal == SIGUSR1)
+	// {
+		// printf("Peticion comunicacion\n");
+		// global_var->conversation_started = true;
+		// kill(global_var->pid, SIGUSR1);
+	// }
+	if (global_var->conversation_started && signal == SIGUSR1)
 	{
-		sigaddset(&global_var->set, SIGUSR1);
+		printf("1\n");
+		ft_btoa(SIGUSR1);
     	kill(global_var->pid, SIGUSR1);
 	}
-	else
+	else if (global_var->conversation_started)
 	{
-		sigaddset(&global_var->set, SIGUSR2);
+		printf("0\n");
+		ft_btoa(SIGUSR2);
     	kill(global_var->pid, SIGUSR2);
 	}
-	//printf("PID CLIENTE: %d\n", global_var->pid);
-}
-
-int	ft_ismemberset(int signal)
-{
-	int isIncluded = (global_var->set.__val[0] & (1 << (signal - 1))) != 0;
-	if (isIncluded)
-		return (1);
-	return (0);
 }
 
 int main()
@@ -77,14 +67,13 @@ int main()
     sigemptyset(&sa.sa_mask);
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
-	printf("pid personal: %d\n", getpid());
 
+	printf("pid personal: %d\n", getpid());
 	global_var = malloc(sizeof(t_variables));
-	global_var->bauds_pause = 104;
-	//printf("vel: %d\n", global_var->bauds_pause);
+	global_var->bauds_pause = 1000;
 	global_var->personal_pid = ft_itoa(getpid());
 	global_var->str_bits = malloc(sizeof(char) * 9);
-	global_var->conversation_started = false;
+	global_var->conversation_started = true;
 	ft_bzero(global_var->str_bits, 9);
 	global_var->pid = 0;
 	global_var->recived_counter = 0;
@@ -92,7 +81,13 @@ int main()
 	free(global_var->personal_pid);
 
 	while (1) {
-		if (ft_ismemberset(SIGUSR1) && ft_ismemberset(SIGUSR2))
+		pause();
+	}
+    return 0;
+}
+
+/*	
+if (ft_ismemberset(SIGUSR1))
 		{
 			sigemptyset(&global_var->set);
 			global_var->conversation_started = global_var->conversation_started ? false : true;
@@ -106,7 +101,8 @@ int main()
 				printf("INICIO TTRANSFERENCIA\n");
 			sigemptyset(&global_var->set);
 		}
-		else if (global_var->conversation_started && ft_ismemberset(SIGUSR1) && !ft_ismemberset(SIGUSR2))
+	
+else if (global_var->conversation_started && ft_ismemberset(SIGUSR1) && !ft_ismemberset(SIGUSR2))
 		{
 			sigemptyset(&global_var->set);
 			global_var->str_bits[global_var->recived_counter] = '1';
@@ -121,9 +117,4 @@ int main()
 			global_var->recived_counter++;
 			if (global_var->recived_counter > 7)
 				print_bits();
-		}
-		
-		usleep(1000);
-	}
-    return 0;
-}
+		}*/
